@@ -10,18 +10,22 @@ AllocConsole();
 var test = new Test();
 test.Data = "TestData";
 
-PolymorphicBytes polymorphicStream = new PolymorphicBytes();
-polymorphicStream.Write(test);
-polymorphicStream.Write(test);
-polymorphicStream.Write(15);
-polymorphicStream.Write("This is a string!");
-polymorphicStream.Write(new Bitmap(100, 100));
+PolymorphicBufffer polymorphicBuffer = new PolymorphicBufffer();
+polymorphicBuffer.Write(test);
+polymorphicBuffer.Write(test);
+polymorphicBuffer.Write(15);
+polymorphicBuffer.Write("This is a string!");
+polymorphicBuffer.Write(new Bitmap(100, 100));
 
-polymorphicStream.Write(new int[] { 191, 215, 241 });
+polymorphicBuffer.Write(new int[] { 191, 215, 241 });
 
-var buffer = polymorphicStream.ToArray();
+var buffer = polymorphicBuffer.ToArray();
 
-var reader = new PolymorphicBytesReader(buffer);
+polymorphicBuffer.Write(new int[] { 191, 215, 241 });
+
+buffer = polymorphicBuffer.ToArray();
+
+var reader = new PolymorphicBufferReader(buffer);
 foreach (var item in reader.Read<int>())
 {
 	Console.WriteLine(item);
@@ -50,6 +54,9 @@ foreach (var item in reader.Read<int[]>())
 		Console.WriteLine(item[i]);
 	}
 }
+
+
+
 
 
 Console.ReadLine();

@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 
 namespace SmartStream
 {
-	public class PolymorphicBytesReader
+	public class PolymorphicBufferReader
 	{
 		private BinaryReader _reader;
 		private IPolymorphicSerializer _serializer;
 
-		public PolymorphicBytesReader(byte[] buffer)
+		public PolymorphicBufferReader(byte[] buffer)
 		{
 			_reader = new BinaryReader(new MemoryStream(buffer));
 			_serializer = new BinarySerializer();
 		}
 
-		public PolymorphicBytesReader(byte[] buffer, IPolymorphicSerializer serializer) : this(buffer)
+		public PolymorphicBufferReader(byte[] buffer, IPolymorphicSerializer serializer) : this(buffer)
 		{
 			_serializer = serializer;
 		}

@@ -13,7 +13,7 @@ using System.Xml.Linq;
 
 namespace SmartStream
 {
-	public partial class PolymorphicBytes
+	public partial class PolymorphicBufffer
 	{
 		internal struct HeaderInfo
 		{
@@ -33,7 +33,7 @@ namespace SmartStream
 
 		private IPolymorphicSerializer _serializer;
 
-		public PolymorphicBytes()
+		public PolymorphicBufffer()
 		{
 			_memoryStream = new RecyclableMemoryStream(new RecyclableMemoryStreamManager());
 			_writer = new BinaryWriter(_memoryStream);
@@ -41,7 +41,7 @@ namespace SmartStream
 			_serializer = new BinarySerializer();
 		}
 
-		public PolymorphicBytes(IPolymorphicSerializer serializer) : this()
+		public PolymorphicBufffer(IPolymorphicSerializer serializer) : this()
 		{
 			_serializer = serializer;
 		}
