@@ -15,7 +15,6 @@ namespace SmartStream
 {
 	public partial class PolymorphicBytes
 	{
-
 		internal struct HeaderInfo
 		{
 			public long PayloadBegin { get; set; }
@@ -110,13 +109,12 @@ namespace SmartStream
 					_writer.Write(info.PayloadBegin);
 					_writer.Write(info.PayloadEnd);
 				}
-
 			}
 
 			long position = _memoryStream.Position;
-			_memoryStream.Seek(0, SeekOrigin.Begin);
+			_memoryStream.Position = 0;
 			_writer.Write(position);
-			_memoryStream.Seek(position, SeekOrigin.Begin);
+			_memoryStream.Position = position;
 
 			_writer.Write(BlobData.ToArray());
 			_writer.Flush();

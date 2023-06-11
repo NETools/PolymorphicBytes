@@ -52,9 +52,9 @@ namespace SmartStream
 						var buffer = new byte[payloadEnd - payloadBegin];
 						long position = _reader.BaseStream.Position;
 
-						_reader.BaseStream.Seek(payloadBegin + headerSize, SeekOrigin.Begin);
+						_reader.BaseStream.Position = payloadBegin + headerSize;
 						_reader.BaseStream.ReadExactly(buffer);
-						_reader.BaseStream.Seek(position, SeekOrigin.Begin);
+						_reader.BaseStream.Position = position;
 
 						using (var blobDataStream = new MemoryStream(buffer))
 						{
