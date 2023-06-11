@@ -111,7 +111,7 @@ namespace SmartStream
 				}
 			}
 
-			long position = _memoryStream.Position;
+			var position = _memoryStream.Position;
 			_memoryStream.Position = 0;
 			_writer.Write(position);
 			_memoryStream.Position = position;

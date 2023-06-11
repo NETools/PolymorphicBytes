@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.IO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -10,20 +11,16 @@ namespace SmartStream
 {
 	public class PolymorphicBytesReader
 	{
-		public PolymorphicBytes BaseBuffer { get; private set; }
-
 		private BinaryReader _reader;
 		private IPolymorphicSerializer _serializer;
 
-		public PolymorphicBytesReader(PolymorphicBytes bytes)
+		public PolymorphicBytesReader(byte[] buffer)
 		{
-			BaseBuffer = bytes;
-
-			_reader = new BinaryReader(BaseBuffer.ToStream());
+			_reader = new BinaryReader(new MemoryStream(buffer));
 			_serializer = new BinarySerializer();
 		}
 
-		public PolymorphicBytesReader(PolymorphicBytes bytes, IPolymorphicSerializer serializer) : this(bytes)
+		public PolymorphicBytesReader(byte[] buffer, IPolymorphicSerializer serializer) : this(buffer)
 		{
 			_serializer = serializer;
 		}

@@ -21,7 +21,7 @@ polymorphicStream.Write(new int[] { 191, 215, 241 });
 
 var buffer = polymorphicStream.ToArray();
 
-var reader = new PolymorphicBytesReader(polymorphicStream);
+var reader = new PolymorphicBytesReader(buffer);
 foreach (var item in reader.Read<int>())
 {
 	Console.WriteLine(item);
