@@ -10,21 +10,16 @@ AllocConsole();
 var test = new Test();
 test.Data = "TestData";
 
-PolymorphicBufffer polymorphicBuffer = new PolymorphicBufffer();
-polymorphicBuffer.Write(test);
-polymorphicBuffer.Write(test);
-polymorphicBuffer.Write(15);
-polymorphicBuffer.Write("This is a string!");
-polymorphicBuffer.Write(new Bitmap(100, 100));
+PolymorphicBufferWriter writer = new PolymorphicBufferWriter();
+writer.Write(test);
+writer.Write(test);
+writer.Write(15);
+writer.Write("This is a string!");
+writer.Write(new Bitmap(100, 100));
 
-polymorphicBuffer.Write(new int[] { 191, 215, 241 });
+writer.Write(new int[] { 191, 215, 241 });
 
-var buffer = polymorphicBuffer.ToArray();
-
-polymorphicBuffer.Write(new int[] { 191, 215, 241 });
-
-buffer = polymorphicBuffer.ToArray();
-
+var buffer = writer.ToArray();
 var reader = new PolymorphicBufferReader(buffer);
 foreach (var item in reader.Read<int>())
 {
@@ -54,10 +49,6 @@ foreach (var item in reader.Read<int[]>())
 		Console.WriteLine(item[i]);
 	}
 }
-
-
-
-
 
 Console.ReadLine();
 
