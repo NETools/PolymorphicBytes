@@ -9,20 +9,33 @@ using System.Threading.Tasks;
 
 namespace SmartStream
 {
-	public class PolymorphicBufferReader
+	public class PolymorphicBufferReader : IDisposable
 	{
 		private BinaryReader _reader;
 		private IPolymorphicSerializer _serializer;
 
-		public PolymorphicBufferReader(byte[] buffer)
+		public PolymorphicBufferReader(Stream stream)
 		{
-			_reader = new BinaryReader(new MemoryStream(buffer));
+			if (!stream.CanSeek)
+				throw new ArgumentException("Stream must be seekable!");
+
+			_reader = new BinaryReader(stream);
 			_serializer = new BinarySerializer();
 		}
 
+		public PolymorphicBufferReader(byte[] buffer) : this(new MemoryStream(buffer)) { }
 		public PolymorphicBufferReader(byte[] buffer, IPolymorphicSerializer serializer) : this(buffer)
 		{
 			_serializer = serializer;
+		}
+		public PolymorphicBufferReader(Stream stream, IPolymorphicSerializer serializer) : this(stream)
+		{
+			_serializer = serializer;
+		}
+
+		public void Dispose()
+		{
+			_reader.Dispose();
 		}
 
 		public IEnumerable<T> Read<T>()

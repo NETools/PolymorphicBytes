@@ -13,7 +13,7 @@ using System.Xml.Linq;
 
 namespace SmartStream
 {
-	public partial class PolymorphicBufferWriter
+	public partial class PolymorphicBufferWriter : IDisposable
 	{
 		internal struct HeaderInfo
 		{
@@ -22,13 +22,13 @@ namespace SmartStream
 		}
 
 		internal Dictionary<Type, List<HeaderInfo>> Header { get; private set; } = new Dictionary<Type, List<HeaderInfo>>();
-		internal MemoryStream BlobData { get; private set; } = new MemoryStream();
-
 
 		private bool _dirty;
-		private byte[] _cachedBuffer;
-		
+		private byte[] _cachedBuffer = null;
+
+		private RecyclableMemoryStream _blobData;
 		private RecyclableMemoryStream _memoryStream;
+
 		private BinaryWriter _writer;
 
 		private IPolymorphicSerializer _serializer;
@@ -36,6 +36,7 @@ namespace SmartStream
 		public PolymorphicBufferWriter()
 		{
 			_memoryStream = new RecyclableMemoryStream(new RecyclableMemoryStreamManager());
+			_blobData = new RecyclableMemoryStream(new RecyclableMemoryStreamManager());
 			_writer = new BinaryWriter(_memoryStream);
 
 			_serializer = new BinarySerializer();
@@ -60,7 +61,7 @@ namespace SmartStream
 				_serializer.Serialize(blobDataStream, item);
 				var blobDataBuffer = blobDataStream.ToArray();
 
-				var start = BlobData.Position;
+				var start = _blobData.Position;
 				var end = start + blobDataBuffer.Length;
 
 				Header[typeof(T)].Add(new HeaderInfo()
@@ -69,7 +70,7 @@ namespace SmartStream
 					PayloadEnd = end
 				});
 
-				BlobData.Write(blobDataBuffer);
+				_blobData.Write(blobDataBuffer);
 			}
 		}
 
@@ -82,7 +83,7 @@ namespace SmartStream
 
 			CreateStream();
 
-			_cachedBuffer = _memoryStream.ToArray();
+			_cachedBuffer = _memoryStream.GetBuffer();
 			return _cachedBuffer;
 		}
 
@@ -116,7 +117,7 @@ namespace SmartStream
 			_writer.Write(position);
 			_memoryStream.Position = position;
 
-			_writer.Write(BlobData.ToArray());
+			_writer.Write(_blobData.GetBuffer());
 			_writer.Flush();
 
 			_dirty = false;
@@ -126,6 +127,13 @@ namespace SmartStream
 		{
 			CreateStream();
 			return _memoryStream;
+		}
+
+		public void Dispose()
+		{
+			_memoryStream.Dispose();
+			_blobData.Dispose();
+			_writer.Dispose();
 		}
 	}
 }
