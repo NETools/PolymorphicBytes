@@ -7,29 +7,35 @@ using System.Text.Json;
 
 AllocConsole();
 
-//var test = new Test();
-//test.Data = "TestData";
+var test = new Test();
+test.Data = "TestData";
 
-//PolymorphicBufferWriter writer = new PolymorphicBufferWriter();
-//writer.Write(test);
-//writer.Write(test);
-//writer.Write(15);
-//writer.Write("This is a string!!");
-//writer.Write(new Bitmap(100, 100));
+ObjectWriter writer = new ObjectWriter();
+writer.Write(test);
+writer.Write(test);
+writer.Write(15);
+writer.Write("This is a string!!");
+writer.Write(new Bitmap(100, 100));
 
-//writer.Write(new int[] { 191, 215, 241 });
+writer.Write(new int[] { 191, 215, 241 });
 
-//var buffer = writer.ToArray();
+var buffer = writer.ToArray();
 
-//writer.Write("This is a string!!!!!!");
-//buffer = writer.ToArray();
+writer.Write("This is a string!!!!!!");
+buffer = writer.ToArray();
 
 
-//File.WriteAllBytes("data", buffer);
+File.WriteAllBytes("data", buffer);
 
 FileStream fs = new FileStream("data", FileMode.Open);
 
-var reader = new PolymorphicBufferReader(fs);
+var reader = new ObjectReader(fs);
+
+foreach (var item in reader.Read<double>()) 
+{
+	Console.WriteLine(item);
+}
+
 foreach (var item in reader.Read<int>())
 {
 	Console.WriteLine(item);

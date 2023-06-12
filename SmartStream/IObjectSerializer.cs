@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace SmartStream
 {
-	public interface IPolymorphicSerializer
+	public interface IObjectSerializer
 	{
-
 		void Serialize(Stream serializationStream, object value);
 		T Deserialize<T>(Stream serializationStream);
 		T Deserialize<T>(byte[] buffer);

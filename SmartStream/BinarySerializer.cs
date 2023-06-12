@@ -2,7 +2,7 @@
 
 namespace SmartStream
 {
-	public class BinarySerializer : IPolymorphicSerializer
+	public class BinarySerializer : IObjectSerializer
 	{
 		private BinaryFormatter _binaryFormatter = new BinaryFormatter();
 
